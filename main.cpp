@@ -5,55 +5,66 @@
 
 
 #include <iostream>
-#include <cryptopp/integer.h>
-using namespace std;
+//using namespace std;
 
+#include <cryptopp/eccrypto.h>
+#include <cryptopp/cryptlib.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/oids.h>
+//using namespace CryptoPP;
 
-typedef struct pair {
-    int serial_key_trinket;
-    int serial_key_car;
-} pair_serial_keys;
+#include "Trinket.h"
+#include "Car.h"
+
 
 int main(int argc, char **argv) {
-    pair_serial_keys pair;
+    using namespace CryptoPP;
+    AutoSeededRandomPool prng;
+    Trinket trinket("ololo");
+    Car car("ololo");
 
-    // to_produce_car_with_trinket(&) {
-        // var serial_key_trinket = gen_random(0, INT_MAX);
-        // var serial_key_car = serial_key_trinket;
-    //}
-    // establish_session() {
-        //gen_pub_sec_keys
-        // var t_pub
-        // var t_sec
+    Data channel = trinket.to_sign("unlock");
 
-        //gen_pub_sec_keys
-        // var c_pub
-        // var c_sec
-
-        // text channel;
-        // channel = encrypt_ecdh(t_pub, t_sec)
-
-        //
-    // }
-
-
-
-    CryptoPP::Integer m("4294967295"), n("0x1000000000000000000000000000000"), j;
-    j = 1999;
-
-    cout << "n+m: " << std::hex << n + m << endl;
-    cout << "n-m: " << std::hex << n - m << endl;
-    cout << "n*m: " << std::hex << n * m << endl;
-    cout << "n%m: " << std::hex << n % m << endl;
-
-    cout << "(n*m)%j:" << std::hex << a_times_b_mod_c(n,m,j) << endl;
-    cout << "(n^m)%j:" << std::hex << a_exp_b_mod_c(n,m,j) << endl;
+    std::cout << "\n\n\n\n";
+    car.receive_command(channel);
 
 
 
 
-
-
-//    a.Encode();
     return 0;
 }
+
+
+
+
+//    ECDSA<ECP, SHA256>::PrivateKey k1;
+//    k1.Initialize( prng, ASN1::secp256r1() );
+//    ECDSA<ECP, SHA256>::PublicKey publicKey;
+//    k1.MakePublicKey(publicKey);
+//    ECDSA<ECP, SHA256>::Verifier verifier(publicKey);
+//    ECDSA<ECP, SHA256>::Signer signer(k1);
+//
+//    std::string message = "Do or do not. There is no try.";
+//
+//    size_t siglen = signer.MaxSignatureLength();
+//    std::string signature(siglen, 0x00);
+//    siglen = signer.SignMessage( prng, (const byte*)&message[0],
+//                                 message.size(),
+//                                 (byte*)&signature[0]
+//                                 );
+//    signature.resize(siglen);
+//
+//
+//
+//    bool result = verifier.VerifyMessage( (const byte*)&message[0],
+//                                          message.size(),
+//                                          (const byte*)&signature[0],
+//                                          signature.size()
+//                                          );
+
+// Verification failure?
+//    if( !result ) {
+//        std::cout << "Failed to verify signature on message" << std::endl;
+//    } else {
+//        std::cout << "All good!" << std::endl;
+//    }

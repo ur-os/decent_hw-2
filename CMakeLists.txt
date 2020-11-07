@@ -5,5 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 
-add_executable(decent_hw-2 main.cpp)
+add_executable(decent_hw-2
+        main.cpp
+        Trinket.cpp
+        Trinket.h
+        Car.cpp
+        Car.h
+        Utils.cpp
+        Utils.h
+        )
+
 target_link_libraries(decent_hw-2 cryptopp)
