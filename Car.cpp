@@ -4,33 +4,69 @@
 
 #include "Car.h"
 
-bool Car::receive_command(const Data& data_channel) {
-    std::cout << "\nCAR\n";
+Car::Car() {
+    c_privateKey.Initialize(prng, ASN1::secp256r1() );
+    c_privateKey.MakePublicKey(c_publicKey);
+    std::cout << "\nCar:\ninitialized" << std::endl;
+}
 
-    std::string message = data_channel.cmd;
-    std::string signature = data_channel.signature;
-    ECDSA<ECP, SHA256>::Verifier verifier(data_channel.publicKey);
+bool Car::verify(const Data& channel) {
+    std::string message = channel.cmd;
+    std::string signature = channel.signature;
+    ECDSA<ECP, SHA256>::Verifier verifier(t_publicKey);
 
     bool result = verifier.VerifyMessage( (const byte*)&message[0],
                                           message.size(),
                                           (const byte*)&signature[0],
                                           signature.size()
     );
+    std::cout << "\nCar:\nauthenticated: " << result << std::endl;
+    return result;
+}
 
-    Data data = {"", ""};
-    if( !result ) {
-        std::cout << "FUCKUP" << std::endl;
-        return false;
-    } else {
-        std::cout << "\nPASS!" << std::endl;
+bool Car::receive(const Data& channel) {
+    if(channel.signature == MAGIC_NUMB) {
+        t_publicKey = channel.publicKey;
+        std::cout << "\nCar:\n" << "trinket pubKey was setup" << std::endl;
+        return true;
     }
-
-    std::cout << "content: " << message << "\nsignature: " << signature;
-    return true;
+    if(verify(channel)) {
+        execute(channel.cmd);
+        return true;
+    }
+    return false;
 }
 
-Car::Car(std::string serial_number) {
-    serial_n = std::move(serial_number);
-    k1.Initialize( prng, ASN1::secp256r1() );
-    k1.MakePublicKey(publicKey);
+void Car::execute(const std::string& cmd) {
+    std::cout << "\nCar:\nexecute command:\n" << cmd << std::endl;
 }
+
+Data Car::sign(Data data) {
+    ECDSA<ECP, SHA256>::Signer signer(c_privateKey);
+    std::string message = data.cmd;
+
+    size_t siglen = signer.MaxSignatureLength();
+    std::string signature(siglen, 0x00);
+    siglen = signer.SignMessage( prng, (const byte*)&message[0],
+                                 message.size(),
+                                 (byte*)&signature[0]
+    );
+    signature.resize(siglen);
+
+    data.cmd = message;
+    data.signature = signature;
+    std::cout << "\nCar:\nsing " << data.cmd << std::endl << "with: " << data.signature << std::endl;
+    return data;
+}
+
+Data Car::emmit(Data data) {
+    std::cout << "\nCar:\nemmit data" << std::endl;
+    return data;
+}
+
+Data Car::share_pubKey() {
+    std::cout << "\nCar:\nemmit pubkey" << std::endl;
+    return Data({"", MAGIC_NUMB, c_publicKey});
+}
+
+

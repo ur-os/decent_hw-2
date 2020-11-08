@@ -19,57 +19,28 @@
 
 int main(int argc, char **argv) {
     using namespace CryptoPP;
+    Data channel;
 
       // initialize by manufacturer in secure
+    Trinket trinket;
+    Car car;
 
-    Trinket trinket("ololo");
-    Car car("ololo");
+    channel = trinket.share_pubKey();
+    car.receive(channel);
+    channel = car.share_pubKey();
+    trinket.receive(channel);
+    channel = {"", ""};
 
-      // in use
+      // in common use with open channel
+    channel = trinket.emmit(trinket.sign({"unlock"}));
 
-    Data channel = trinket.to_sign("unlock");
+      // hacker Retr0 try edit command in case "man in middle"
+    //channel.cmd = "blow up";
 
-
-    std::cout << "\n\n\n\n";
-    car.receive_command(channel);
-
-
-
-
+    std::cout << car.receive(channel);
+    std::cout << car.receive(channel);
     return 0;
 }
 
 
 
-
-//    ECDSA<ECP, SHA256>::PrivateKey t_privateKey;
-//    t_privateKey.Initialize( prng, ASN1::secp256r1() );
-//    ECDSA<ECP, SHA256>::PublicKey t_publicKey;
-//    t_privateKey.MakePublicKey(t_publicKey);
-//    ECDSA<ECP, SHA256>::Verifier verifier(t_publicKey);
-//    ECDSA<ECP, SHA256>::Signer signer(t_privateKey);
-//
-//    std::string message = "Do or do not. There is no try.";
-//
-//    size_t siglen = signer.MaxSignatureLength();
-//    std::string signature(siglen, 0x00);
-//    siglen = signer.SignMessage( prng, (const byte*)&message[0],
-//                                 message.size(),
-//                                 (byte*)&signature[0]
-//                                 );
-//    signature.resize(siglen);
-//
-//
-//
-//    bool result = verifier.VerifyMessage( (const byte*)&message[0],
-//                                          message.size(),
-//                                          (const byte*)&signature[0],
-//                                          signature.size()
-//                                          );
-
-// Verification failure?
-//    if( !result ) {
-//        std::cout << "Failed to verify signature on message" << std::endl;
-//    } else {
-//        std::cout << "All good!" << std::endl;
-//    }

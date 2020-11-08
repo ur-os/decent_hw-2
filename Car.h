@@ -5,24 +5,30 @@
 #ifndef DECENT_HW_2_CAR_H
 #define DECENT_HW_2_CAR_H
 
-#include <cryptopp/eccrypto.h>
-#include <cryptopp/cryptlib.h>
-#include <cryptopp/osrng.h>
-#include <cryptopp/oids.h>
+#include "Utils.h"
 using namespace CryptoPP;
 
-#include "Utils.h"
 
 class Car: Utils {
-    std::string serial_n;
     AutoSeededRandomPool prng;
-    ECDSA<ECP, SHA256>::PrivateKey k1;
-    ECDSA<ECP, SHA256>::PublicKey publicKey;
+    ECDSA<ECP, SHA256>::PrivateKey c_privateKey;
+    ECDSA<ECP, SHA256>::PublicKey c_publicKey;
+
+    ECDSA<ECP, SHA256>::PublicKey t_publicKey;
+
+
 
 public:
-    explicit Car(std::string serial_number);
-    void send_command(std::string cmd);
-    bool receive_command(const Data& data_channel);
+    explicit Car();
+
+    Data sign(Data);
+    static Data emmit(Data);
+    bool receive(const Data&);
+    bool verify(const Data&);
+    static void execute(const std::string&);
+    Data share_pubKey();
+
+
 };
 
 

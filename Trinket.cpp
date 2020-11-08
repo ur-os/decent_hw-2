@@ -6,19 +6,51 @@
 
 #include <utility>
 
-Trinket::Trinket(std::string serial_number) {
-    serial_n = std::move(serial_number);
+Trinket::Trinket() {
     t_privateKey.Initialize(prng, ASN1::secp256r1() );
     t_privateKey.MakePublicKey(t_publicKey);
 }
 
-Data Trinket::to_sign(std::string cmd) {
-    std::cout << "\nTRINKET\n";
+bool Trinket::receive(Data channel) {
+    if(channel.signature == MAGIC_NUMB) {
+        t_publicKey = channel.publicKey;
+        return true;
+    }
+    if(verify(channel)) {
+        execute(channel.cmd);
+        return true;
+    }
+    return false;
+}
 
-    ECDSA<ECP, SHA256>::Verifier verifier(t_publicKey);
+Data Trinket::share_pubKey() {
+    return Data({"", MAGIC_NUMB, t_publicKey});
+}
+
+void Trinket::execute(const std::string& cmd) {
+    std::cout << "\nCar execute command:\n" << cmd << std::endl;
+}
+
+bool Trinket::verify(Data channel) {
+    std::string message = channel.cmd;
+    std::string signature = channel.signature;
+    ECDSA<ECP, SHA256>::Verifier verifier(c_publicKey);
+
+    bool result = verifier.VerifyMessage( (const byte*)&message[0],
+                                          message.size(),
+                                          (const byte*)&signature[0],
+                                          signature.size()
+    );
+    return result;
+}
+
+Data Trinket::emmit(Data data) {
+    return data;
+}
+
+Data Trinket::sign(Data data) {
     ECDSA<ECP, SHA256>::Signer signer(t_privateKey);
-
-    std::string message = cmd;
+    std::string message = data.cmd;
 
     size_t siglen = signer.MaxSignatureLength();
     std::string signature(siglen, 0x00);
@@ -28,52 +60,7 @@ Data Trinket::to_sign(std::string cmd) {
     );
     signature.resize(siglen);
 
-
-
-    bool result = verifier.VerifyMessage( (const byte*)&message[0],
-                                          message.size(),
-                                          (const byte*)&signature[0],
-                                          signature.size()
-    );
-
-    Data data = {"", ""};
-    if( !result ) {
-        std::cout << "Failed to verify signature on message" << std::endl;
-    } else {
-        std::cout << "All good!\ncontent: " << message << "\nsignature: " << signature << std::endl;
-        data = {message, signature, t_publicKey};
-    }
-
-    return (data);
-
-}
-
-Data Trinket::receive_command(Data data_channel) {
-    std::string message = data_channel.cmd;
-    std::string signature = data_channel.signature;
-    ECDSA<ECP, SHA256>::Verifier verifier(t_publicKey);
-    bool result = verifier.VerifyMessage( (const byte*)&message[0],
-                                          message.size(),
-                                          (const byte*)&signature[0],
-                                          signature.size()
-    );
-
-    Data data = {"", ""};
-    if( !result ) {
-        std::cout << "FUCKUP" << std::endl;
-    } else {
-        std::cout << "\nPASS!\ncontent: " << message << "\nsignature: " << signature << std::endl;
-        data = {message, signature};
-    }
-
-    return Data();
-}
-
-Data Trinket::send_pubKey() {
-    Data d = {"", "", t_publicKey};
-    return(d);
-}
-
-Data Trinket::send_data(const Data& data) {
-    return Data();
+    data.cmd = message;
+    data.signature = signature;
+    return data;
 }
