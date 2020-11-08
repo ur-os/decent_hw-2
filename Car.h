@@ -15,7 +15,8 @@ class Car: Utils {
     ECDSA<ECP, SHA256>::PublicKey c_publicKey;
 
     ECDSA<ECP, SHA256>::PublicKey t_publicKey;
-
+    Data c_last_data;
+    Integer nonce;
 
 
 public:

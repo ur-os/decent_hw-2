@@ -22,6 +22,8 @@ int main(int argc, char **argv) {
     Data channel;
 
       // initialize by manufacturer in secure
+    std::cout << "\n\n\t____________Initializing____________";
+
     Trinket trinket;
     Car car;
 
@@ -31,14 +33,16 @@ int main(int argc, char **argv) {
     trinket.receive(channel);
     channel = {"", ""};
 
+
       // in common use with open channel
+    std::cout << "\n\n\t____________In_use____________";
+
     channel = trinket.emmit(trinket.sign({"unlock"}));
+    car.receive(channel);
 
       // hacker Retr0 try edit command in case "man in middle"
-    //channel.cmd = "blow up";
-
-    std::cout << car.receive(channel);
-    std::cout << car.receive(channel);
+    channel.cmd = "blow up";
+    car.receive(channel);
     return 0;
 }
 

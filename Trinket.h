@@ -15,13 +15,14 @@ class Trinket: Utils {
     ECDSA<ECP, SHA256>::PublicKey t_publicKey;
 
     ECDSA<ECP, SHA256>::PublicKey c_publicKey;
-
+    Data c_last_data;
+    Integer nonce;
 
 public:
     explicit Trinket();
 
     Data sign(Data);
-    static Data emmit(Data);
+    Data emmit(Data);
     bool receive(Data);
     bool verify(Data);
     static void execute(const std::string& cmd);

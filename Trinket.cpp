@@ -9,26 +9,33 @@
 Trinket::Trinket() {
     t_privateKey.Initialize(prng, ASN1::secp256r1() );
     t_privateKey.MakePublicKey(t_publicKey);
+    c_last_data = {"", ""};
+//    nonce.GenerateRandom(prng);
+    std::cout << "\nTrinket:\ngenerate self keys" << std::endl;
+
 }
 
 bool Trinket::receive(Data channel) {
     if(channel.signature == MAGIC_NUMB) {
         t_publicKey = channel.publicKey;
+        std::cout << "\nTrinket:\n" << "trinket pubKey was setup" << std::endl;
         return true;
     }
     if(verify(channel)) {
         execute(channel.cmd);
         return true;
     }
+
     return false;
 }
 
 Data Trinket::share_pubKey() {
+    std::cout << "\nTrinket:\nemmit pubkey" << std::endl;
     return Data({"", MAGIC_NUMB, t_publicKey});
 }
 
 void Trinket::execute(const std::string& cmd) {
-    std::cout << "\nCar execute command:\n" << cmd << std::endl;
+    std::cout << "\nTrinket:\nexecute command:\n" << cmd << std::endl;
 }
 
 bool Trinket::verify(Data channel) {
@@ -41,10 +48,14 @@ bool Trinket::verify(Data channel) {
                                           (const byte*)&signature[0],
                                           signature.size()
     );
+
+    result ? std::cout << "\nTrinket:\nauthenticated successful" : std::cout << "\nTrinket:\nauthenticated failed";
     return result;
 }
 
 Data Trinket::emmit(Data data) {
+//    nonce.GenerateRandom(prng);
+    std::cout << "\nTrinket:\nemmit data" << std::endl;
     return data;
 }
 
@@ -62,5 +73,6 @@ Data Trinket::sign(Data data) {
 
     data.cmd = message;
     data.signature = signature;
+    std::cout << "\nTrinket:\nsing: \"" << data.cmd << "\"\nwith: \"" << data.signature << "\"\n";
     return data;
 }

@@ -17,6 +17,7 @@ typedef struct d {
     std::string cmd;
     std::string signature;
     CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA256>::PublicKey publicKey;
+    CryptoPP::Integer nonce;
 } Data;
 
 class Utils {};

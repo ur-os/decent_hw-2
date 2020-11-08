@@ -7,7 +7,9 @@
 Car::Car() {
     c_privateKey.Initialize(prng, ASN1::secp256r1() );
     c_privateKey.MakePublicKey(c_publicKey);
-    std::cout << "\nCar:\ninitialized" << std::endl;
+    c_last_data = {"", ""};
+//    nonce.GenerateRandom(prng);
+    std::cout << "\nCar:\ngenerate self keys" << std::endl;
 }
 
 bool Car::verify(const Data& channel) {
@@ -20,11 +22,12 @@ bool Car::verify(const Data& channel) {
                                           (const byte*)&signature[0],
                                           signature.size()
     );
-    std::cout << "\nCar:\nauthenticated: " << result << std::endl;
+    result ? std::cout << "\nCar:\nauthenticated successful" : std::cout << "\nCar:\nauthenticated failed";
     return result;
 }
 
 bool Car::receive(const Data& channel) {
+    std::cout << "\nCar:\n" << "receive:\ncommand: \"" << channel.cmd << "\"\nwith: \""<< channel.signature << "\"\n";
     if(channel.signature == MAGIC_NUMB) {
         t_publicKey = channel.publicKey;
         std::cout << "\nCar:\n" << "trinket pubKey was setup" << std::endl;
@@ -38,7 +41,7 @@ bool Car::receive(const Data& channel) {
 }
 
 void Car::execute(const std::string& cmd) {
-    std::cout << "\nCar:\nexecute command:\n" << cmd << std::endl;
+    std::cout << "\nCar:\nexecute command: \"" << cmd << "\"\n";
 }
 
 Data Car::sign(Data data) {
