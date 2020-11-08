@@ -18,8 +18,11 @@ using namespace CryptoPP;
 class Trinket: Utils {
     std::string serial_n;
     AutoSeededRandomPool prng;
-    ECDSA<ECP, SHA256>::PrivateKey k1;
-    ECDSA<ECP, SHA256>::PublicKey publicKey;
+    ECDSA<ECP, SHA256>::PrivateKey t_privateKey;
+    ECDSA<ECP, SHA256>::PublicKey t_publicKey;
+
+    ECDSA<ECP, SHA256>::PrivateKey c_privateKey;
+    ECDSA<ECP, SHA256>::PublicKey c_publicKey;
 
 
 public:

@@ -19,11 +19,16 @@
 
 int main(int argc, char **argv) {
     using namespace CryptoPP;
-    AutoSeededRandomPool prng;
+
+      // initialize by manufacturer in secure
+
     Trinket trinket("ololo");
     Car car("ololo");
 
+      // in use
+
     Data channel = trinket.to_sign("unlock");
+
 
     std::cout << "\n\n\n\n";
     car.receive_command(channel);
@@ -37,12 +42,12 @@ int main(int argc, char **argv) {
 
 
 
-//    ECDSA<ECP, SHA256>::PrivateKey k1;
-//    k1.Initialize( prng, ASN1::secp256r1() );
-//    ECDSA<ECP, SHA256>::PublicKey publicKey;
-//    k1.MakePublicKey(publicKey);
-//    ECDSA<ECP, SHA256>::Verifier verifier(publicKey);
-//    ECDSA<ECP, SHA256>::Signer signer(k1);
+//    ECDSA<ECP, SHA256>::PrivateKey t_privateKey;
+//    t_privateKey.Initialize( prng, ASN1::secp256r1() );
+//    ECDSA<ECP, SHA256>::PublicKey t_publicKey;
+//    t_privateKey.MakePublicKey(t_publicKey);
+//    ECDSA<ECP, SHA256>::Verifier verifier(t_publicKey);
+//    ECDSA<ECP, SHA256>::Signer signer(t_privateKey);
 //
 //    std::string message = "Do or do not. There is no try.";
 //
