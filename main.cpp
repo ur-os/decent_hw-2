@@ -43,6 +43,7 @@ int main(int argc, char **argv) {
       // hacker Retr0 try edit command in case "man in middle"
     channel.cmd = "blow up";
     car.receive(channel);
+
     return 0;
 }
 

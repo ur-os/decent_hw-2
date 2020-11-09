@@ -22,7 +22,7 @@ bool Car::verify(const Data& channel) {
                                           (const byte*)&signature[0],
                                           signature.size()
     );
-    result ? std::cout << "\nCar:\nauthenticated successful" : std::cout << "\nCar:\nauthenticated failed";
+    result ? std::cout << "\nCar:\nauthenticated successful\n" : std::cout << "\nCar:\nauthenticated failed\n";
     return result;
 }
 

@@ -16,6 +16,7 @@ Trinket::Trinket() {
 }
 
 bool Trinket::receive(Data channel) {
+    std::cout << "\nTrinket:\n" << "receive:\ncommand: \"" << channel.cmd << "\"\nwith: \""<< channel.signature << "\"\n";
     if(channel.signature == MAGIC_NUMB) {
         t_publicKey = channel.publicKey;
         std::cout << "\nTrinket:\n" << "trinket pubKey was setup" << std::endl;
@@ -49,7 +50,7 @@ bool Trinket::verify(Data channel) {
                                           signature.size()
     );
 
-    result ? std::cout << "\nTrinket:\nauthenticated successful" : std::cout << "\nTrinket:\nauthenticated failed";
+    result ? std::cout << "\nTrinket:\nauthenticated successful\n" : std::cout << "\nTrinket:\nauthenticated failed\n";
     return result;
 }
 
