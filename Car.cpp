@@ -5,10 +5,8 @@
 #include "Car.h"
 
 Car::Car() {
-    c_privateKey.Initialize(prng, ASN1::secp256r1() );
+    c_privateKey.Initialize(prng, ASN1::secp256r1());
     c_privateKey.MakePublicKey(c_publicKey);
-    c_last_data = {"", ""};
-//    nonce.GenerateRandom(prng);
     std::cout << "\nCar:\ngenerate self keys" << std::endl;
 }
 

@@ -5,18 +5,16 @@
 #ifndef DECENT_HW_2_TRINKET_H
 #define DECENT_HW_2_TRINKET_H
 
-#include "Utils.h"
+#include "utils.h"
 using namespace CryptoPP;
 
 
-class Trinket: Utils {
+class Trinket {
     AutoSeededRandomPool prng;
     ECDSA<ECP, SHA256>::PrivateKey t_privateKey;
     ECDSA<ECP, SHA256>::PublicKey t_publicKey;
 
     ECDSA<ECP, SHA256>::PublicKey c_publicKey;
-    Data c_last_data;
-    Integer nonce;
 
 public:
     explicit Trinket();
@@ -25,7 +23,7 @@ public:
     Data emmit(Data);
     bool receive(Data);
     bool verify(Data);
-    static void execute(const std::string& cmd);
+    static void execute(const std::string&);
     Data share_pubKey();
 
 };

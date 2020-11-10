@@ -11,16 +11,13 @@
 #include <cryptopp/osrng.h>
 #include <cryptopp/oids.h>
 
-#define MAGIC_NUMB "478276944582684"
+const std::string MAGIC_NUMB = "478276944582684";
 
-typedef struct d {
+struct Data{
     std::string cmd;
     std::string signature;
     CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA256>::PublicKey publicKey;
-    CryptoPP::Integer nonce;
-} Data;
-
-class Utils {};
+};
 
 
 #endif //DECENT_HW_2_UTILS_H

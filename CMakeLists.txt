@@ -11,8 +11,7 @@ add_executable(decent_hw-2
         Trinket.h
         Car.cpp
         Car.h
-        Utils.cpp
-        Utils.h
+        utils.h
         )
 
 target_link_libraries(decent_hw-2 cryptopp)

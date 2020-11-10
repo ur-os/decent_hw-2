@@ -5,18 +5,16 @@
 #ifndef DECENT_HW_2_CAR_H
 #define DECENT_HW_2_CAR_H
 
-#include "Utils.h"
+#include "utils.h"
 using namespace CryptoPP;
 
 
-class Car: Utils {
+class Car {
     AutoSeededRandomPool prng;
     ECDSA<ECP, SHA256>::PrivateKey c_privateKey;
     ECDSA<ECP, SHA256>::PublicKey c_publicKey;
 
     ECDSA<ECP, SHA256>::PublicKey t_publicKey;
-    Data c_last_data;
-    Integer nonce;
 
 
 public:

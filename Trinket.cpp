@@ -4,13 +4,10 @@
 
 #include "Trinket.h"
 
-#include <utility>
 
 Trinket::Trinket() {
-    t_privateKey.Initialize(prng, ASN1::secp256r1() );
+    t_privateKey.Initialize(prng, ASN1::secp256r1());
     t_privateKey.MakePublicKey(t_publicKey);
-    c_last_data = {"", ""};
-//    nonce.GenerateRandom(prng);
     std::cout << "\nTrinket:\ngenerate self keys" << std::endl;
 
 }
@@ -55,7 +52,6 @@ bool Trinket::verify(Data channel) {
 }
 
 Data Trinket::emmit(Data data) {
-//    nonce.GenerateRandom(prng);
     std::cout << "\nTrinket:\nemmit data" << std::endl;
     return data;
 }
